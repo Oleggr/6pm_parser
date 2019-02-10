@@ -1,5 +1,6 @@
 import config
 
+from telegram import KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler
 from parser import *
 
@@ -13,15 +14,37 @@ TOKEN = config.token
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
+    try:
+        keyboard = [["/get"]]
 
-    replye = parse(get_html_from_file())
+        rep_mark = ReplyKeyboardMarkup(keyboard, resize_keyboard = True)
 
-    message = 'Hi, here is what I found:\n{}'.format(replye)    
-    
+        bot.sendMessage(update.message.chat.id, 'Hi!', reply_markup = rep_mark)
+
+        #update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+    except Exception as e:
+        print('EXCEPTION ::', e)
+
+
+def get(bot, update):
+
+    replyes = parse(get_html_from_file())
+    message = '*Here is what I found:*\n\n'
+
+    try:
+        for replye in replyes:
+            #print(replye)
+            message += replye
+
     #for reply in replyes:
     #    message =+ reply + '\n'
+    #print(update.message.chat.id)
+    #update.message.reply_text(message)
+        bot.sendMessage(update.message.chat.id, message, parse_mode="markdown")
 
-    update.message.reply_text(message)        
+    except Exception as e:
+            print('EXCEPTION ::', e)
 
 
 def main():
@@ -33,6 +56,7 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("get", get))
 
     # Start the Bot
     updater.start_polling()

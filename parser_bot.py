@@ -13,23 +13,15 @@ TOKEN = config.token
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-    update.message.reply_text('Hi! Use /get to get info about discount')
 
-
-def get_discount(bot, update):
-
-    chat_id = update.message.chat_id
     replyes = parse(get_html_from_file())
 
-    update.message.reply_text('We working')
+    message = 'Hi, here is what I found:\n'    
     
     for reply in replyes:
+        message =+ reply + '\n'
 
-        bot.send_message(
-                chat_id, 
-                text=reply, 
-                parse_mode=telegram.ParseMode.MARKDOWN
-                )
+    update.message.reply_text(message)        
 
 
 def main():
@@ -41,7 +33,6 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("get", get_discount))
 
     # Start the Bot
     updater.start_polling()

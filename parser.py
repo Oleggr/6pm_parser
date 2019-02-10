@@ -52,12 +52,10 @@ def parse(html):
                 + ' ' \
                 + article.find('p', class_ = '_3BAWv').text
 
-        if discount > 90:
-            message = name + '\n' \
-                    + '*' + discount + '*\n' \
-                    + '[link](' + link + ')'
-
-            replyes.append(message)
+        if discount > 90.0:
+            message = name + '\n' + str(discount) + '\n' + link
+            return message
+            #replyes.append(message)
             
 
         
@@ -71,8 +69,8 @@ def parse(html):
         # print()
         # print('=======================')
 
-    return replyes
+    #return replyes
 
 
-# if __name__ == '__main__':
-#     parse(get_html_from_file())
+#if __name__ == '__main__':
+#    print(parse(get_html_from_file()))

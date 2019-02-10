@@ -14,12 +14,12 @@ TOKEN = config.token
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
 
-    replyes = parse(get_html_from_file())
+    replye = parse(get_html_from_file())
 
-    message = 'Hi, here is what I found:\n'    
+    message = 'Hi, here is what I found:\n{}'.format(replye)    
     
-    for reply in replyes:
-        message =+ reply + '\n'
+    #for reply in replyes:
+    #    message =+ reply + '\n'
 
     update.message.reply_text(message)        
 

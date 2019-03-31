@@ -39,27 +39,27 @@ def parse(html):
 
     soup = BeautifulSoup(html, features="html.parser")
 
-    print(soup)
+    #print(soup)
 
-    sales_page = soup.find('div', class_ = '_2AfQY')
+    sales_page = soup.find('div', class_ = '_3a_mTsgKrQ')
 
     articles = sales_page.find_all('article')
 
     for article in articles:
 
-        current_price = float(article.find('span', class_='_3VzBv _1kZOe').text.split('$')[1])
-        standart_price = float(article.find('span', class_='GftsQ').text.split('$')[1])
+        current_price = float(article.find('span', class_='_3g-jZuDv10 A3nFJo4_bv').text.split('$')[1])
+        standart_price = float(article.find('span', class_='_2GD3fhboDf').text.split('$')[1])
         discount = 100 - round((current_price / standart_price) * 100, 2)
         link = 'https://www.6pm.com' + article.a.get('href')
         # name1 = article.find('p', class_ = '_1HOLv').span.text
-        name = '*' + article.find('p', class_ = '_1HOLv').span.text \
+        name = '*' + article.find('p', class_ = 'tvGtN07acv').span.text \
                 + '*\n_' \
-                + article.find('p', class_ = '_3BAWv').text + '_'
+                + article.find('p', class_ = '_3J_2hAUBnw').text + '_'
 
-        if discount > 89.0:
+        if discount > 87.0:
             message = name + '\n' \
                     + 'Price now: ' + str(current_price) + '\n' \
-                    + 'Standart price: _' + str(standart_price) + '_\n' \
+                    + 'Standart price: ' + str(standart_price) + '\n' \
                     + 'Discount: *' + str(discount) + '*\n' \
                     + '[link to 6pm](' + link + ')' + '\n\n'
 

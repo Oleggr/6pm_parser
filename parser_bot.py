@@ -79,9 +79,13 @@ def get(bot, update):
                 + MONITORING_TOKEN \
                 + '/sendMessage -d chat_id=' \
                 + MY_ID \
-                + ' -d text=\"Getting info for '+ str(update.message.chat.id) + ' request failed\"'
+                + ' -d text=\"FAIL: Getting info for '+ str(update.message.chat.id) + '\'s request failed\"'
 
         os.system(command)
+
+        bot.sendMessage(update.message.chat.id, 
+                        '*Error*\nGathering information gone wrong, try again later',
+                        parse_mode="markdown")
 
         #TODO add logging
 
@@ -108,7 +112,8 @@ def main():
                 + MONITORING_TOKEN \
                 + '/sendMessage -d chat_id=' \
                 + MY_ID \
-                + ' -d text=\"Polling fucked up\"'
+                + ' -d text=\"Polling of @DiscountNotificator_bot fucked up\"'
+
 
         os.system(command)
 

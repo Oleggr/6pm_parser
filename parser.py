@@ -39,6 +39,8 @@ def parse(html):
 
     soup = BeautifulSoup(html, features="html.parser")
 
+    print(soup)
+
     sales_page = soup.find('div', class_ = '_2AfQY')
 
     articles = sales_page.find_all('article')

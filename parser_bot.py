@@ -1,5 +1,5 @@
 import config
-
+import os
 from telegram import KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler
 from parser import *
@@ -9,6 +9,8 @@ from parser import *
 
 
 TOKEN = config.token
+MONITORING_TOKEN = config.monitoring_bot_token
+MY_ID = config.oleggr_id
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -23,16 +25,34 @@ def start(bot, update):
 
         #update.message.reply_text('Please choose:', reply_markup=reply_markup)
 
-    except Exception as e:
-        print('EXCEPTION ::', e)
+        command = 'curl -s -X POST ' \
+                + 'https://api.telegram.org/bot' \
+                + MONITORING_TOKEN \
+                + '/sendMessage -d chat_id=' \
+                + MY_ID \
+                + ' -d text=\"'+ str(update.message.chat.id) + ' started sales bot\"'
 
+        os.system(command)
+
+    except Exception as e:
+
+        #string_to_send = 'Problem%20in%20start%20command'
+        command = 'curl -s -X POST ' \
+                + 'https://api.telegram.org/bot' \
+                + MONITORING_TOKEN \
+                + '/sendMessage -d chat_id=' \
+                + MY_ID \
+                + ' -d text=\"'+ str(update.message.chat.id) + ' failed in starting sales bot\"'
+
+        os.system(command)
+
+        #print('EXCEPTION 1: ', e)
 
 def get(bot, update):
-
-    replyes = parse(get_html_from_file())
-    message = '*Here is what I found:*\n\n'
-
     try:
+        replyes = parse(get_html(URL))
+        message = '*Here is what I found:*\n\n#'
+
         for replye in replyes:
             #print(replye)
             message += replye
@@ -44,8 +64,28 @@ def get(bot, update):
         bot.sendMessage(update.message.chat.id, message, parse_mode="markdown")
 
     except Exception as e:
-            print('EXCEPTION ::', e)
 
+        #string_to_send = 'Problem%20in%20getting%20data%20or%20in%20sending%20message'
+
+        #monitoring_url = 'https://api.telegram.org/bot' \
+         #       + MONITORING_TOKEN \
+          #      + '/sendMessage?chat_id=' \
+           #     + MY_ID \
+            #    + '&text=' \
+             #   + string_to_send
+
+        command = 'curl -s -X POST ' \
+                + 'https://api.telegram.org/bot' \
+                + MONITORING_TOKEN \
+                + '/sendMessage -d chat_id=' \
+                + MY_ID \
+                + ' -d text=\"Getting info for '+ str(update.message.chat.id) + ' request failed\"'
+
+        os.system(command)
+
+        #TODO add logging
+
+        print('EXCEPTION 2: ', e)
 
 def main():
     """Run bot."""
@@ -58,8 +98,21 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("get", get))
 
-    # Start the Bot
-    updater.start_polling()
+    try:
+        # Start the Bot
+        updater.start_polling()
+    except Exception as e:
+
+        command = 'curl -s -X POST ' \
+                + 'https://api.telegram.org/bot' \
+                + MONITORING_TOKEN \
+                + '/sendMessage -d chat_id=' \
+                + MY_ID \
+                + ' -d text=\"Polling fucked up\"'
+
+        os.system(command)
+
+        #print('EXCEPTION 3: ', e)
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is
